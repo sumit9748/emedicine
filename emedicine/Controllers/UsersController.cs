@@ -37,5 +37,25 @@ namespace emedicine.Controllers
             response = userapi.register(users, connection);
             return response;
         }
+        [HttpGet]
+        [Route("viewUser")]
+        public Response viewUser(Users users)
+        {
+            Response response = new Response();
+            SqlConnection connection = new SqlConnection(_configuration.GetConnectionString("EMedCS").ToString());
+            Userapi userapi = new Userapi();
+            response = userapi.viewUser(users, connection);
+            return response;
+        }
+        [HttpGet]
+        [Route("viewUserList")]
+        public Response viewUserList(Users users)
+        {
+            Response response = new Response();
+            SqlConnection connection = new SqlConnection(_configuration.GetConnectionString("EMedCS").ToString());
+            Userapi userapi = new Userapi();
+            response = userapi.viewUserList(users, connection);
+            return response;
+        }
     }
 }

@@ -74,5 +74,88 @@ namespace emedicine.Models
 
             return response;
         }
+        public Response viewUser(Users users,SqlConnection connection)
+        {
+            Response response = new Response();
+            SqlDataAdapter da = new SqlDataAdapter("sp_viewUser", connection);
+            da.SelectCommand.Parameters.AddWithValue("@ID", users.ID);
+            
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+
+            if (dt.Rows.Count > 0)
+            {
+                response.statusCode = 200;
+                response.statusMessage = "User exists";
+                Users user = new Users();
+
+                user.ID = Convert.ToInt32(dt.Rows[0]["ID"]);
+                user.FirstName = Convert.ToString(dt.Rows[0]["FirstName"]);
+                user.LastName = Convert.ToString(dt.Rows[0]["LastName"]);
+                user.Email = Convert.ToString(dt.Rows[0]["Email"]);
+                user.Type = Convert.ToString(dt.Rows[0]["Type"]);
+                user.Fund = Convert.ToDecimal(dt.Rows[0]["Fund"]);
+
+                response.users = user;
+
+            }
+            else
+            {
+                response.statusCode = 100;
+                response.statusMessage = "User dose not exists";
+                response.users = null;
+            }
+
+            return response;
+        }
+        public Response viewUserList(Users users,SqlConnection connection)
+        {
+            Response response = new Response();
+            SqlDataAdapter da = new SqlDataAdapter("sp_viewUserList", connection);
+
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            List<Users> userList = new List<Users>();
+            if (dt.Rows.Count > 0)
+            {
+                response.statusCode = 200;
+                response.statusMessage = "User exists";
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    Users user = new Users();
+
+                    user.ID = Convert.ToInt32(dt.Rows[i]["ID"]);
+                    user.FirstName = Convert.ToString(dt.Rows[i]["FirstName"]);
+                    user.LastName = Convert.ToString(dt.Rows[i]["LastName"]);
+                    user.Email = Convert.ToString(dt.Rows[i]["Email"]);
+                    user.Type = Convert.ToString(dt.Rows[i]["Type"]);
+                    user.Fund = Convert.ToDecimal(dt.Rows[i]["Fund"]);
+
+                    userList.Add(user);
+
+                }
+                if (userList.Count > 0)
+                {
+                    response.statusMessage = "Users detailed fetched successfully";
+                    response.statusCode = 200;
+                    response.listUsers = userList;
+                }
+                else
+                {
+                    response.statusMessage = "Users not exists";
+                    response.statusCode = 100;
+                    response.listUsers = null;
+                }
+
+            }
+            else
+            {
+                response.statusCode = 100;
+                response.statusMessage = "User dose not exists";
+                response.users = null;
+            }
+
+            return response;
+        }
     }
 }
