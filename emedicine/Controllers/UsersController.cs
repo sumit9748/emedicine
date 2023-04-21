@@ -54,8 +54,19 @@ namespace emedicine.Controllers
             Response response = new Response();
             SqlConnection connection = new SqlConnection(_configuration.GetConnectionString("EMedCS").ToString());
             Userapi userapi = new Userapi();
-            response = userapi.viewUserList(users, connection);
+            response = userapi.viewUserList(connection);
             return response;
         }
+        [HttpPost]
+        [Route("updateProfile")]
+        public Response updateProfile(Users users)
+        {
+            Response response = new Response();
+            SqlConnection connection = new SqlConnection(_configuration.GetConnectionString("EMedCS").ToString());
+            Userapi userapi = new Userapi();
+            response = userapi.updateProfile(users, connection);
+            return response;
+        }
+
     }
 }

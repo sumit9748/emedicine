@@ -108,7 +108,7 @@ namespace emedicine.Models
 
             return response;
         }
-        public Response viewUserList(Users users,SqlConnection connection)
+        public Response viewUserList(SqlConnection connection)
         {
             Response response = new Response();
             SqlDataAdapter da = new SqlDataAdapter("sp_viewUserList", connection);
@@ -156,6 +156,32 @@ namespace emedicine.Models
             }
 
             return response;
+        }
+        public Response updateProfile(Users users,SqlConnection connection)
+        {
+            Response response = new Response();
+            SqlCommand cmd = new SqlCommand("sp_UpdateProfile", connection);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@FirstName", users.FirstName);
+            cmd.Parameters.AddWithValue("@LastName", users.LastName);
+            cmd.Parameters.AddWithValue("@Password", users.Password);
+            cmd.Parameters.AddWithValue("@Email", users.Email);
+            
+            connection.Open();
+            int i = cmd.ExecuteNonQuery();
+            connection.Close();
+            if (i > 0)
+            {
+                response.statusCode = 200;
+                response.statusMessage = "User details updated successfully";
+            }
+            else
+            {
+                response.statusCode = 100;
+                response.statusMessage = "User details can not be updated";
+            }
+            return response;
+
         }
     }
 }
